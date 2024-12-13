@@ -7,7 +7,7 @@ Script that fits and plots generalised linear mixed effects models to quantify b
 ## Description of the file structure ##
 
 There are three folders: **Data** (contains the raw data), **Code** (contains an R script that fits the 
-generalised linear mixed effects models and generates the plots), and **Outputs** (contains a copy of the plots).
+cumulative link mixed models and generates the plots), and **Outputs** (contains a copy of the plots).
 
 
 ### Description of the data ##
@@ -42,10 +42,7 @@ The Data folder has one file (*bleaching_data.csv*), that includes the following
     * 4 - 96-100% of the colony area was bleached,
     * 5 - partial mortality,
     * 6- whole colony mortality.
-* Bleaching_res - bleaching response (bleached = 1, not bleached = 0)
-* Bleaching_minor - whether the colony had minor bleaching (1-50% of the colony) =1, or no bleaching =0. NAs indicate more severe bleaching levels.
-* Bleaching_major - whether the colony had major bleaching (51-95% of the colony) = 1, or minor to no bleaching = 0. NAs indicate more severe bleaching levels.
-* Bleaching_fully - whether the colony was fully bleached (>96% of the colony, partial mortality, or fully dead) =1, or major to no bleaching = 0.
+
 * lat - site latitude
 * long - site longitude
 * Zone - depth zone (S = shallow, 3-8 m; D = deep, 9-15 m)
