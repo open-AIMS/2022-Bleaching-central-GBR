@@ -11,13 +11,12 @@ library(forcats)   #  forcats_1.0.0
 library(qpcR)      #  qpcR_1.4-1
 library(ordinal)   #  ordinal_2023.12-4.1
 
-
-
+rm(list=ls())
 set.seed(12)
 
 # Set working directory to a folder that contains two additional folders: 
 # a "Data" folder (with the bleaching data csv file) and an empty "Outputs" folder
-# to store figures generated here
+# to store figures generated here.
 
 path = getwd()
 
@@ -33,8 +32,8 @@ dat$Bleaching = as.factor(dat$Bleaching)
 ################################################################################
 
 # Colour scheme for bleaching scores
-colours_taxa = c("#FFFFCC", "#F0E442","#E69F00", "#D55E00" , "#D52E00","#990000")
-names(colours_taxa) = c("1", "2", "3", "4", "5", "6")
+colours_sev = c("#FFFFCC", "#F0E442","#E69F00", "#D55E00" , "#D52E00","#990000")
+names(colours_sev) = c("1", "2", "3", "4", "5", "6")
 
 # Depth labels
 depth_names <- c(
@@ -45,7 +44,7 @@ depth_names <- c(
 
 Taxa_plot = ggplot(data = dat, aes(x = Taxa, fill = factor(Bleaching)))+
   geom_bar(position = "fill", stat = "count", col = "black") +
-  scale_fill_manual(values = colours_taxa, name = "Bleaching category",
+  scale_fill_manual(values = colours_sev, name = "Bleaching category",
                     breaks = c("1", "2", "3", "4", "5", "6"),
                     labels = c("no bleaching",
                                "minor partial bleaching",
@@ -74,7 +73,7 @@ Taxa_plot
 Inshore_plot =
   ggplot(data = dat[dat$Cross_shelf == "inshore", ], aes(x = Exposure, fill = factor(Bleaching)))+
   geom_bar(position = "fill", stat = "count", col = "black") +
-  scale_fill_manual(values = colours_taxa, name = "Bleaching category",
+  scale_fill_manual(values = colours_sev, name = "Bleaching category",
                     breaks = c("1", "2", "3", "4", "5", "6"),
                     labels = c("no bleaching",
                                "minor partial bleaching",
@@ -96,7 +95,7 @@ Inshore_plot
 Offshore_plot =
   ggplot(data = dat[dat$Cross_shelf == "offshore", ], aes(x = Exposure, fill = factor(Bleaching)))+
   geom_bar(position = "fill", stat = "count", col = "black") +
-  scale_fill_manual(values = colours_taxa, name = "Bleaching category",
+  scale_fill_manual(values = colours_sev, name = "Bleaching category",
                     breaks = c("1", "2", "3", "4", "5", "6"),
                     labels = c("no bleaching",
                                "minor partial bleaching",
@@ -110,15 +109,17 @@ Offshore_plot =
   scale_x_discrete(limits = c("FR", "FL", "BA", "LA"),
                    labels = c("Front", "Flank", "Back", "Lagoon")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust= 1),
-        strip.background =element_rect(fill="white")) +
+        strip.background = element_rect(fill="white")) +
   xlab("") +
   ylab("Proportion of colonies")
 
 
 Offshore_plot  
 
-Figure2 = (Taxa_plot + ggtitle("a- Taxa"))/ ((Inshore_plot  + theme(legend.position = "none") +  ggtitle("b- Inshore")) + (Offshore_plot + theme(legend.position = "none") + ylab("") +
-                                                                                                                             ggtitle("c- Offshore")))
+Figure2 = (Taxa_plot + ggtitle("(a) Taxa") + theme(plot.title = element_text(face="bold"))) /
+              ((Inshore_plot  + theme(legend.position = "none", plot.title = element_text(face="bold")) +  ggtitle("(b) Inshore")) + 
+                 (Offshore_plot + theme(legend.position = "none", plot.title = element_text(face="bold")) + ylab("") + ggtitle("(c) Offshore")))
+
 Figure2
 # save plots of raw data
 #ggsave(paste(path, "/Outputs/Figure2.png", sep = ""), Figure2, width = 25, height = 20, units = "cm", dpi = 300)
@@ -234,10 +235,6 @@ if (run_models) {
 ################################################################################
 #                       Setting up plot schemes and labels                     #
 ################################################################################
-
-# Set colour scheme for bleaching categories
-colours_sev = c("#FFFFCC", "#F0E442","#E69F00", "#D55E00" , "#D52E00","#990000")
-names(colours_taxa) = c("none", "minor", "major", "fully", "pm", "dead")
 
 
 # Taxa labels for plotting
@@ -548,7 +545,7 @@ slope_plot = ggplot() +
                                "whole colony mortality"),
                     name = "") +
   geom_hline(yintercept = c(0.25, 0.5, 0.75), col = "grey", linetype = "dashed") +
-  xlab("Slope (°C)") +
+  xlab("Slope (°)") +
   ylab("Bleaching probability") +
   theme_classic() +
   theme(text = element_text(size = 6), panel.grid.major.y = element_line(linetype = "dashed")) +
@@ -572,11 +569,11 @@ slope_plot
 
 
 
-Figure3 = (fd_plot +ggtitle("a") + theme(text = element_text(family = "Calibri"), legend.position = "none") ) + 
-             (dhw_plot +ggtitle("b") +  ylab("") + theme(text = element_text(family = "Calibri"),  legend.position = "none") ) +
-             (slope_plot +ggtitle("c") +  ylab("") + theme(text = element_text(family = "Calibri")) ) +
-  (ubed_plot_in + ggtitle("d - inshore")  + theme(text = element_text(family = "Calibri"), legend.position = "none")) + 
-     (ubed_plot_of + ggtitle("e - offshore") + ylab("")+ theme(text = element_text(family = "Calibri"), legend.position = "none")) +plot_layout(ncol = 3) 
+Figure3 = (fd_plot +ggtitle("(a)") + theme(text = element_text(family = "Calibri"), legend.position = "none", plot.title = element_text(face="bold")) ) + 
+             (dhw_plot +ggtitle("(b)") +  ylab("") + theme(text = element_text(family = "Calibri"),  legend.position = "none", plot.title = element_text(face="bold")) ) +
+             (slope_plot +ggtitle("(c)") +  ylab("") + theme(text = element_text(family = "Calibri"), plot.title = element_text(face="bold")) ) +
+  (ubed_plot_in + ggtitle("(d) Inshore")  + theme(text = element_text(family = "Calibri"), legend.position = "none", plot.title = element_text(face="bold"))) + 
+     (ubed_plot_of + ggtitle("(e) Offshore") + ylab("")+ theme(text = element_text(family = "Calibri"), legend.position = "none", plot.title = element_text(face="bold"))) +plot_layout(ncol = 3) 
 Figure3
 
 # Save Figure 3
@@ -599,7 +596,7 @@ d_Zone = d_Zone[d_Zone$Taxa %in% c("Abra", "Acor", "Lobo_sp", "Menc", "Pmas",
 
 # Modifty to "run_models = TRUE" if it is the first time running the script
 # and the models have not been saved in the Outputs folder
-run_models = FALSE 
+run_models = FALSE
 
 if (run_models) {
   
